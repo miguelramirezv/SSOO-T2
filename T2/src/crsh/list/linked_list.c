@@ -74,10 +74,87 @@ void list_append(List* list, Process* process)
   list -> current_occupancy++;
 }
 
+void list_append_waiting_time(List* list, Process* process)
+{
+  Node* node = malloc(sizeof(Node));
+  node -> process = process;
+  node -> next = NULL;
+
+  // Caso en que nuevo nodo queda en primer lugar de cola
+  if (list -> head == NULL){
+    list -> head = node;
+  }
+  else if (node -> process -> start_time < list -> head -> process -> start_time){
+      node -> next = list -> head;
+      list -> head = node;
+  }
+  // Caso en que tiene mismo start_time que primer lugar de cola
+  else if (node -> process -> start_time == list -> head -> process -> start_time){
+      // Caso en que proceso queda en primer lugar por tener menor deadline
+      if (node -> process -> deadline < list -> head -> process -> deadline){
+          node -> next = list -> head;
+          list -> head = node;
+      }
+      else if ((node -> process -> deadline == list -> head -> process -> deadline) && (node -> process -> pid < list -> head -> process -> pid)){
+          node -> next = list -> head;
+          list -> head = node;
+      }
+      // Caso en que proceso no queda en primer lugar. Hay que revisar donde queda.
+      else {
+          for (Node* current = list -> head; current; current = current -> next){
+              if (node -> process -> deadline < current -> next -> process -> deadline){
+                  node -> next = current -> next;
+                  current -> next = node;
+                  break;
+              }
+              else if (node -> process -> deadline == current -> next -> process -> deadline){
+                for (Node* current2 = current; current2; current2 = current2 -> next){
+                  if (node -> process -> pid < current2 -> next -> process -> pid){
+                    node -> next = current2 -> next;
+                    current2 -> next = node;
+                    break;
+                  }
+                }
+              }
+          }
+      }
+  }
+  // Caso en que no tiene mismo start_time que primero de la cola
+  else {
+      for (Node* current = list -> head; current; current = current -> next){
+          if (current -> next == NULL){
+            node -> next = NULL;
+            current -> next = node;
+            break;
+
+          }
+          else if (node -> process -> start_time < current -> next -> process -> start_time){
+              // Entra aca
+              node -> next = current -> next;
+              current -> next = node;
+              break;
+          }
+          else if (node -> process -> start_time == current -> next -> process -> start_time){
+              // Revisar por pid
+              if (node -> process -> deadline < current -> next -> process -> deadline){
+                  node -> next = current -> next;
+                  current -> next = node;
+                  break;
+              }
+          }
+      }
+  }
+  list -> current_occupancy++;
+}
+
 /* Saca primer elemento de la lista */
 Node* list_pop(List* list){
   
+  // FALTA REVISAR SI ES LA UlTIMA
   Node* node = list -> head; /* First element */
+  if (node == NULL){
+    return NULL;
+  }
   Node* new_head = list -> head -> next;  /* Second element, new head */
 
   list -> head = new_head;   /* Assign new head to list */

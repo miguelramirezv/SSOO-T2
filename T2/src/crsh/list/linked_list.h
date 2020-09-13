@@ -30,6 +30,8 @@ List* list_init();
 /** Inserta un nuevo elemento al final de la lista */
 void list_append(List* list, Process* process);
 
+void list_append_waiting_time(List* list, Process* process);
+
 Node* list_pop(List* list);
 /** Imprime todos los elementos de la lista */
 void list_print(List* list);

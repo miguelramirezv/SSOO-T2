@@ -214,12 +214,38 @@ Queue* read_file(char* input){
   // numero_programas = atoi(strtok(NULL, " ")); // no se si necesario
 }
 
+Queue* create_waiting(Queue* procesos){
+
+  Node* proceso = procesos -> queue_list -> head;
+  Queue* procesos_return = queue_init();
+  while (proceso){
+    list_append_waiting_time(procesos_return, proceso -> process);
+    proceso = proceso -> next;
+  }
+  
+  return procesos_return;
+  // numero_programas = atoi(strtok(NULL, " ")); // no se si necesario
+}
+
 int main(int argc, char **argv)
 {
   for (int i = 0; i < argc; ++i)
     {
         printf("argv[%d]: %s\n", i, argv[i]);
     }
-  read_file(argv[1]);
+  char* input_file = argv[1];
+  char* output_file = argv[2];
+  if (true){    // ESTO HACERLO BIEN REVISAR SI HAY TERCER INPUT
+    int cpus = 1;
+  }
+  else {
+    int cpus = atoi(argv[3]);
+  }
+  Queue* deadline_queue = read_file(argv[1]);
+  Queue* waiting_queue = create_waiting(deadline_queue);
+  Queue* cpu_queue = list_init();
+  Queue* finish_queue = list_init();
+  
+  Node* corriendo_cpu = list_pop(waiting_queue); // ??????
   return 0;
 }
