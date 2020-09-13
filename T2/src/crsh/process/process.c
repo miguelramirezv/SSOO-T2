@@ -7,13 +7,10 @@
 Process* process_init(char* name){
 
     Process* process = malloc(sizeof(Process));
-    printf("entra4-+\n");
     process -> pid = 0;
-    printf("entra4-+```````++++\n");
     process -> name = malloc(strlen(name) + 1);
     strcpy(process -> name, name);
     process -> priority = 0;
-    printf("entra4-+-\n");
 
     process -> estado = 0;
     process -> turnos_cpu = 0;

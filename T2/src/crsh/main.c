@@ -185,6 +185,7 @@ Queue* read_file(char* input){
     while (token != NULL){
       if (contador == 0){
         proceso = process_init(token);
+
       }
       else if (contador == 1){
         proceso -> pid = atoi(token);

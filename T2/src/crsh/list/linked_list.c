@@ -19,11 +19,9 @@ void list_append(List* list, Process* process)
   Node* node = malloc(sizeof(Node));
   node -> process = process;
   node -> next = NULL;
-  printf("llega4\n");
 
   // Caso en que nuevo nodo queda en primer lugar de cola
   if (list -> head == NULL){
-    printf("entra\n");
     list -> head = node;
   }
   else if (node -> process -> deadline < list -> head -> process -> deadline){
