@@ -19,9 +19,14 @@ void list_append(List* list, Process* process)
   Node* node = malloc(sizeof(Node));
   node -> process = process;
   node -> next = NULL;
+  printf("llega4\n");
 
   // Caso en que nuevo nodo queda en primer lugar de cola
-  if (node -> process -> deadline < list -> head -> process -> deadline){
+  if (list -> head == NULL){
+    printf("entra\n");
+    list -> head = node;
+  }
+  else if (node -> process -> deadline < list -> head -> process -> deadline){
       node -> next = list -> head;
       list -> head = node;
   }
@@ -46,7 +51,13 @@ void list_append(List* list, Process* process)
   // Caso en que no tiene mismo deadline que primero de la cola
   else {
       for (Node* current = list -> head; current; current = current -> next){
-          if (node -> process -> deadline < current -> next -> process -> deadline){
+          if (current -> next == NULL){
+            node -> next = NULL;
+            current -> next = node;
+            break;
+
+          }
+          else if (node -> process -> deadline < current -> next -> process -> deadline){
               // Entra aca
               node -> next = current -> next;
               current -> next = node;

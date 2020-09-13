@@ -8,15 +8,15 @@ struct process {
     
     int pid;
     char* name;
-    int priority;
+    int priority; // not yet
     
     // Necesarios para output
-    int estado;
-    int turnos_cpu;
-    int num_interrupciones;
-    int turnaround_time;
-    int respose_time;
-    int waiting_time;
+    int estado; // not yet
+    int turnos_cpu;  // ir actualizando
+    int num_interrupciones;  // ir actualizando
+    int turnaround_time;  // ir actualizando
+    int respose_time;  // ir actualizando
+    int waiting_time;  // ir actualizando
     int start_time;
     int cantidad_rafagas;
     int deadline;

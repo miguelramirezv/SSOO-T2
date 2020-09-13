@@ -8,7 +8,8 @@
 #include <string.h>
 #include <errno.h>
 #include <signal.h>
-#include "list/list.h"
+#include "list/linked_list.h"
+#include "list/queue.h"
 #include "process/process.h"
 #include <time.h>
 
@@ -167,31 +168,23 @@
 //   args_destroy(args);
 // }
 
-void read_file(char* input){
+Queue* read_file(char* input){
   FILE *file = fopen(input, "r");
-  printf("%s\n", input);
+  Queue* procesos = queue_init();
   char* line[2048];
   char* token;
   int* rafagas;
   int contador;
   Process* proceso;
-  printf("entra0\n");
   fgets(line, sizeof(line), file);
-  printf("entra000000\n");
   int numero_programas = atoi(strtok(line, " "));
-  printf("entra1\n");
   for (int i = 0; i < numero_programas; i++){
-    printf("entra2\n");
     fgets(line, sizeof(line), file);
     token = strtok(line, " ");
     contador = 0;
-    printf("entra3\n");
     while (token != NULL){
-      printf("%s\n", token);
       if (contador == 0){
-        printf("entra4-\n");
         proceso = process_init(token);
-        printf("entra5\n");
       }
       else if (contador == 1){
         proceso -> pid = atoi(token);
@@ -204,7 +197,7 @@ void read_file(char* input){
       }
       else if (contador == 4){
         proceso -> cantidad_rafagas = atoi(token);
-        rafagas = malloc(sizeof(int) * proceso -> cantidad_rafagas);
+        rafagas = malloc(sizeof(int) * ((proceso -> cantidad_rafagas * 2) - 1) + 1);
       }
       else {
         rafagas[contador - 5] =  atoi(token);
@@ -213,7 +206,10 @@ void read_file(char* input){
       contador += 1;
     }
     proceso -> list_rafaga = rafagas; // añadir a programas
+    printf("Nombre proceso: %s\n", proceso->name);
+    list_append(procesos -> queue_list, proceso);
   }
+  return procesos;
   // numero_programas = atoi(strtok(NULL, " ")); // no se si necesario
 }
 

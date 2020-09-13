@@ -1,5 +1,5 @@
 #pragma once
-#include "process.h"
+#include "../process/process.h"
 
 struct linked_list_node;
 

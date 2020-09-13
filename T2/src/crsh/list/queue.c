@@ -8,6 +8,7 @@ Queue* queue_init(){
     
     Queue* queue = malloc(sizeof(queue));
     queue -> queue_list = list_init();
+    return queue;
 
 }
 
