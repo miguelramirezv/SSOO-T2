@@ -1,0 +1,37 @@
+#pragma once
+#include "process.h"
+
+struct linked_list_node;
+
+typedef struct linked_list_node Node;
+
+struct linked_list_node
+{
+  Process* process;
+  Node* next;
+};
+
+struct linked_list;
+
+typedef struct linked_list List;
+
+struct linked_list
+{
+  Node* head;
+
+  Node* tail;
+
+  int current_occupancy;
+};
+
+
+/** Inicializa una lista vacía */
+List* list_init();
+/** Inserta un nuevo elemento al final de la lista */
+void list_append(List* list, Process* process);
+
+Node* list_pop(List* list);
+/** Imprime todos los elementos de la lista */
+void list_print(List* list);
+/** Libera todos los recursos asociados a esta lista */
+void list_destroy(List* list);
