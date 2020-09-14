@@ -10,11 +10,12 @@ List* list_init()
   list -> head = NULL;
   list -> tail = NULL;
   list -> current_occupancy = 0;
+  list -> time = 100000000;
 
   return list;
 }
 
-void list_append(List* list, Process* process)
+Node* list_append(List* list, Process* process)
 {
   Node* node = malloc(sizeof(Node));
   node -> process = process;
@@ -23,10 +24,12 @@ void list_append(List* list, Process* process)
   // Caso en que nuevo nodo queda en primer lugar de cola
   if (list -> head == NULL){
     list -> head = node;
+    return node;
   }
   else if (node -> process -> deadline < list -> head -> process -> deadline){
       node -> next = list -> head;
       list -> head = node;
+      return node;
   }
   // Caso en que tiene mismo deadline que primer lugar de cola
   else if (node -> process -> deadline == list -> head -> process -> deadline){
@@ -34,6 +37,7 @@ void list_append(List* list, Process* process)
       if (node -> process -> pid < list -> head -> process -> pid){
           node -> next = list -> head;
           list -> head = node;
+          return node;
       }
       // Caso en que proceso no queda en primer lugar. Hay que revisar donde queda.
       else {
@@ -41,6 +45,7 @@ void list_append(List* list, Process* process)
               if (node -> process -> pid < current -> next -> process -> pid){
                   node -> next = current -> next;
                   current -> next = node;
+                  return NULL;
                   break;
               }
           }
@@ -70,11 +75,12 @@ void list_append(List* list, Process* process)
               }
           }
       }
+      retun NULL;
   }
   list -> current_occupancy++;
 }
 
-void list_append_waiting_time(List* list, Process* process)
+Node* list_append_waiting_time(List* list, Process* process)
 {
   Node* node = malloc(sizeof(Node));
   node -> process = process;
@@ -83,10 +89,14 @@ void list_append_waiting_time(List* list, Process* process)
   // Caso en que nuevo nodo queda en primer lugar de cola
   if (list -> head == NULL){
     list -> head = node;
+    list -> time = node -> process -> start_time;
+    return node;
   }
   else if (node -> process -> start_time < list -> head -> process -> start_time){
       node -> next = list -> head;
       list -> head = node;
+      list -> time = node -> process -> start_time;
+      return node;
   }
   // Caso en que tiene mismo start_time que primer lugar de cola
   else if (node -> process -> start_time == list -> head -> process -> start_time){
@@ -94,10 +104,14 @@ void list_append_waiting_time(List* list, Process* process)
       if (node -> process -> deadline < list -> head -> process -> deadline){
           node -> next = list -> head;
           list -> head = node;
+          list -> time = node -> process -> start_time;
+          return node;
       }
       else if ((node -> process -> deadline == list -> head -> process -> deadline) && (node -> process -> pid < list -> head -> process -> pid)){
           node -> next = list -> head;
           list -> head = node;
+          list -> time = node -> process -> start_time;
+          return node;
       }
       // Caso en que proceso no queda en primer lugar. Hay que revisar donde queda.
       else {
@@ -105,6 +119,7 @@ void list_append_waiting_time(List* list, Process* process)
               if (node -> process -> deadline < current -> next -> process -> deadline){
                   node -> next = current -> next;
                   current -> next = node;
+                  return NULL;
                   break;
               }
               else if (node -> process -> deadline == current -> next -> process -> deadline){
@@ -112,6 +127,7 @@ void list_append_waiting_time(List* list, Process* process)
                   if (node -> process -> pid < current2 -> next -> process -> pid){
                     node -> next = current2 -> next;
                     current2 -> next = node;
+                    return NULL;
                     break;
                   }
                 }
@@ -156,6 +172,10 @@ Node* list_pop(List* list){
     return NULL;
   }
   Node* new_head = list -> head -> next;  /* Second element, new head */
+
+  if (!new_head){
+    list -> time = 1000000;
+  }
 
   list -> head = new_head;   /* Assign new head to list */
   list -> current_occupancy--;

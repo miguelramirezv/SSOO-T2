@@ -20,7 +20,9 @@ struct process {
     int start_time;
     int cantidad_rafagas;
     int deadline;
+    int running_time;
     int finish;
+    int next_stop; //nro rafaga que voy
     int ultima_rafaga; //0 es waiting y 1 es running
     int* list_rafaga;
 };
