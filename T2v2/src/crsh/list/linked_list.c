@@ -23,6 +23,8 @@ Node* list_append_by_deadline(List* list, Process* process)
   node -> next = NULL;
   // printf("B4 LOGIC\n");
   // printf("HEAD: %p\n", list -> head);
+  // printf("HEAD: %p\n", list -> head -> process -> name);
+
   //return node;
 
   // // Caso en que nuevo nodo queda en primer lugar de cola
@@ -32,9 +34,9 @@ Node* list_append_by_deadline(List* list, Process* process)
     // return node;
   }
   // return node;
-  // // printf("PASE IF\n");
+  // printf("PASE IF\n");
   else if (node -> process -> deadline < list -> head -> process -> deadline){
-    // printf("else if 1\n");
+      // printf("else if 1\n");
       node -> next = list -> head;
       list -> head = node;
       // return node;
@@ -42,7 +44,7 @@ Node* list_append_by_deadline(List* list, Process* process)
   // return node;
   // // Caso en que tiene mismo deadline que primer lugar de cola
   else if (node -> process -> deadline == list -> head -> process -> deadline){
-    // printf("else if 2\n");
+      // printf("else if 2\n");
       // Caso en que proceso queda en primer lugar por tener menor pid
       if (node -> process -> pid < list -> head -> process -> pid){
           node -> next = list -> head;
@@ -51,13 +53,19 @@ Node* list_append_by_deadline(List* list, Process* process)
       }
       // Caso en que proceso no queda en primer lugar. Hay que revisar donde queda.
       else {
-        // printf("FOR LOOP 1 \n");
+          // printf("FOR LOOP 1 \n");
           for (Node* current = list -> head; current; current = current -> next){
+            if (current -> next){
               if (node -> process -> pid < current -> next -> process -> pid){
                   node -> next = current -> next;
                   current -> next = node;
                   break;
               }
+            }
+            else{
+              current -> next = node;
+              node -> next = NULL;
+            }
           }
       }
   }
@@ -299,6 +307,7 @@ Node* list_pop(List* list){
   
   // FALTA REVISAR SI ES LA UlTIMA
   Node* node = list -> head; /* First element */
+  // printf("HEAD INSIDE PROCESS: %p\n", node -> process);
   if (node == NULL){
     return NULL;
   }
@@ -318,10 +327,43 @@ Node* list_pop(List* list){
   // list -> head = new_head;   /* Assign new head to list */
   list -> current_occupancy--;
 
-  // printf("Removed Node: %p\n", node);
+  // printf("Removed Node Process: %p\n", node -> process);
 
   return node;
 };
+
+Node* list_remove(List* list, int pid){
+
+  Node* node = list -> head;
+  if (node == NULL){
+    return NULL;
+  }
+
+  if (node -> process -> pid == pid){
+    if (node -> next){
+      list -> head = node -> next;
+    }
+  }
+  else {
+    for (Node* current = list -> head; current; current = current -> next){
+      if (current -> next){
+        if (current -> next -> process -> pid == pid){
+          if (current -> next -> next){
+            node = current -> next;
+            current -> next = current -> next -> next;
+            break;
+          }
+          else {
+            node = current -> next;
+            current -> next = NULL;
+          }
+        }
+      }
+    }
+  }
+  list -> current_occupancy--;
+  return node;
+}
 
 Node* list_pop_tail(List* list){
 

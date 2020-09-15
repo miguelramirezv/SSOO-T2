@@ -44,6 +44,8 @@ Node* list_append_by_next_stop(List* list, Process* process);
 Node* list_pop(List* list);
 
 Node* list_pop_tail(List* list);
+
+Node* list_remove(List* list, int pid);
 /** Imprime todos los elementos de la lista */
 void list_print(List* list);
 /** Libera todos los recursos asociados a esta lista */
