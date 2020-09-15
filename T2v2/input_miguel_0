@@ -1,0 +1,11 @@
+3
+PROCESS1_RAUL 21 55 120 2 10 4 30
+PROCESS2_RICHI 13 10 60 3 14 3 6 3 12
+PROCESS3_ZEZIMA 5 3 200 4 14 3 6 3 12 3 18
+
+
+El process3 deberia ser interrumpido dos veces que lo deja en ready (esperando
+entrar a la cpu) por 32 segundos. 
+process 1 deberia terminar a los 99 segundos
+Process 2 deberia terminar a los 48 segundos
+process 3 deberia terminar a los 138 seg -> PUEDE SER QUE 132 ?
