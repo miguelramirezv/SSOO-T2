@@ -25,6 +25,15 @@ struct process {
     int deadline;
     int running_time;
     int finish;
+    int enter_waiting;
+    int enter_ready;
+    int enter_running;
+    int enter_finish;
+    int time_waiting_queue;
+    int time_ready_queue;
+    int time_running_queue;
+
+
     int next_stop; //nro rafaga que voy
     int ultima_rafaga; //0 es waiting y 1 es running
     int* list_rafaga;

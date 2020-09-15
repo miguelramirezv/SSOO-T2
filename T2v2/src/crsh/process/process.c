@@ -27,6 +27,13 @@ Process* process_init(char* name){
     process -> ultima_rafaga = 0; //0 es waiting y 1 es running
     process -> deadline = 0;
     process -> finish = 0; // 1 si logra terminar, 0 si no
+    process -> enter_waiting = NULL;
+    process -> enter_waiting = NULL;
+    process -> enter_ready = NULL;
+    process -> enter_running = NULL;
+    process ->  time_waiting_queue = 0;
+    process ->  time_ready_queue = 0;
+    process ->  time_running_queue = 0;
 
     return process;
 
