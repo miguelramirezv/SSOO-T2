@@ -19,6 +19,7 @@ struct process {
     int waiting_time;  // ir actualizando
     int start_time;
     int cantidad_rafagas;
+    int cantidad_rafagas_completadas;
     int original_start_time;
     int was_executed;
     int deadline;

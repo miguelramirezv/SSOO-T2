@@ -39,6 +39,8 @@ Node* list_append_by_start_time(List* list, Process* process);
 
 Node* list_append_waiting_time(List* list, Process* process);
 
+Node* list_append_by_next_stop(List* list, Process* process);
+
 Node* list_pop(List* list);
 
 Node* list_pop_tail(List* list);

@@ -22,7 +22,8 @@ Process* process_init(char* name){
     process -> original_start_time = 0;
     process -> was_executed = 0;
     process -> running_time = 1000000;
-    process -> cantidad_rafagas = 0;
+    process -> cantidad_rafagas = 0; // Numero total rafagas
+    process -> cantidad_rafagas_completadas = 0;
     process -> ultima_rafaga = 0; //0 es waiting y 1 es running
     process -> deadline = 0;
     process -> finish = 0; // 1 si logra terminar, 0 si no
