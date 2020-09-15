@@ -41,7 +41,7 @@ void read_file(char* input, Queue* queue){
       }
       else if (contador == 2){
         proceso ->start_time = atoi(token);
-        proceso -> enter_waiting = atoi(token);
+        proceso -> enter_ready = atoi(token);
       }
       else if (contador == 3){
         proceso -> deadline = atoi(token);
@@ -111,7 +111,7 @@ int main(int argc, char **argv)
     if (queue -> cpu_queue -> head != NULL){
       if (queue -> cpu_queue -> head -> process -> next_stop == time){
         // PROCESO TERMINA. TODO: MAS DE UNO QUE TERMINA EN T
-        if ((queue -> cpu_queue -> head -> process -> deadline == time) || (queue -> cpu_queue -> head -> process -> cantidad_rafagas_completadas >= queue -> cpu_queue -> head -> process -> cantidad_rafagas)){ // REVISAR TAMBIÉN SI ES QUE NO QUEDAN RAFAGAS!
+        if (queue -> cpu_queue -> head -> process -> cantidad_rafagas_completadas >= queue -> cpu_queue -> head -> process -> cantidad_rafagas){ // REVISAR TAMBIÉN SI ES QUE NO QUEDAN RAFAGAS!
           // PASA A FINISHED
           queue -> cpu_queue -> head -> process -> finish = 1;
           list_append_by_deadline(queue -> finished_queue, queue -> cpu_queue -> head -> process);
@@ -258,14 +258,14 @@ int main(int argc, char **argv)
     // printf("WAITING -> READY\n");
     if (queue -> waiting_queue -> head != NULL){
       if (time >= queue -> waiting_queue -> head -> process -> deadline){
-            // TERMINÓ EL PROCESO YA
-            queue -> waiting_queue -> head -> process -> finish = 0;
-            list_append_by_deadline(queue -> finished_queue, queue -> waiting_queue -> head -> process);
-            Node* node = list_pop(queue -> waiting_queue);
-            queue -> waiting_queue -> head -> process -> enter_finish = queue -> waiting_queue -> head -> process -> deadline;
-            queue -> waiting_queue -> head -> process -> time_waiting_queue += queue -> waiting_queue -> head -> process -> deadline - queue -> waiting_queue -> head -> process -> enter_waiting;
-          }
-      iflse (queue -> waiting_queue -> head -> process -> next_stop == time){
+        // TERMINÓ EL PROCESO YA
+        queue -> waiting_queue -> head -> process -> finish = 0;
+        list_append_by_deadline(queue -> finished_queue, queue -> waiting_queue -> head -> process);
+        Node* node = list_pop(queue -> waiting_queue);
+        queue -> waiting_queue -> head -> process -> enter_finish = queue -> waiting_queue -> head -> process -> deadline;
+        queue -> waiting_queue -> head -> process -> time_waiting_queue += queue -> waiting_queue -> head -> process -> deadline - queue -> waiting_queue -> head -> process -> enter_waiting;
+      }
+      else if (queue -> waiting_queue -> head -> process -> next_stop == time){
         list_append_by_deadline(queue -> ready_queue, queue -> waiting_queue -> head -> process);
         queue -> queues_list -> head -> process -> enter_ready = time;
         Node* node = list_pop(queue -> waiting_queue);
