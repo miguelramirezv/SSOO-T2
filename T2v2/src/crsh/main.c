@@ -167,26 +167,6 @@ int main(int argc, char **argv)
                   list_print(queue->ready_queue);
                 }
               }
-
-              // if (queue->cpu_queue->head->process->deadline == time)
-              // {
-              //   // PASA A FINISHED
-              //   queue->cpu_queue->head->process->finish = 1;
-              //   list_append_by_deadline(queue->finished_queue, queue->cpu_queue->head->process);
-              //   Node *node = list_pop(queue->cpu_queue);
-              //   printf("Process %s pasa a FINISHED en Time: %i\n", queue->cpu_queue->head->process->name, time);
-              // }
-              // else
-              // {
-              //   // PASA A WAITING
-              //   int numero_rafaga = queue->cpu_queue->head->process->cantidad_rafagas_completadas;
-              //   queue->cpu_queue->head->process->next_stop = time + queue->cpu_queue->head->process->list_rafaga[numero_rafaga];
-              //   queue->cpu_queue->head->process->cantidad_rafagas_completadas++;
-              //   queue->cpu_queue->head->process->ultima_rafaga = 1;
-              //   printf("Process %s pasa a WAITING en Time: %i\n", queue->cpu_queue->head->process->name, time);
-              //   list_append_by_next_stop(queue->waiting_queue, queue->cpu_queue->head->process);
-              //   Node *node = list_pop(queue->cpu_queue);
-              // }
             }
           }
 
@@ -237,53 +217,6 @@ int main(int argc, char **argv)
               Node *node = list_pop(queue->ready_queue);
               cambios = true;
 
-              // if (queue -> ready_queue -> head -> process -> remaining_interrupcion == -1){
-              // int next_stop = time + queue -> ready_queue -> head -> process -> list_rafaga[numero_rafaga];
-              // printf("Proceso: %s pasa A CPU en tiempo %i\n", queue->ready_queue->head->process->name, time);
-              // queue -> ready_queue -> head -> process -> next_stop = time + queue -> ready_queue -> head -> process -> list_rafaga[numero_rafaga];
-              // queue -> ready_queue -> head -> process -> turnos_cpu++;
-              // queue -> ready_queue -> head -> process -> cantidad_rafagas_completadas++;
-              // if (queue -> ready_queue -> head -> process -> was_executed == 0){
-              //   queue -> ready_queue -> head -> process -> was_executed = 1;
-              //   queue -> ready_queue -> head -> process -> respose_time = time - queue -> ready_queue -> head -> process -> original_start_time;
-              // }
-              // list_append_by_next_stop(queue -> cpu_queue, queue -> ready_queue -> head -> process);
-              // Node* node = list_pop(queue -> ready_queue);
-              // }
-
-              // if (next_stop > queue -> ready_queue -> head -> process -> deadline){
-              //   // NO ALCANZA A TERMINAR
-              //   queue -> ready_queue -> head -> process -> finish = 0;
-              //   list_append_by_deadline(queue -> finished_queue, queue -> ready_queue -> head -> process);
-              //   Node* node = list_pop(queue -> ready_queue);
-              // }
-              // else {
-              //   printf("Proceso: %s pasa A CPU en tiempo %i\n", queue -> ready_queue -> head -> process -> name, time);
-              //   int numero_rafaga = queue -> ready_queue -> head -> process -> cantidad_rafagas_completadas;
-              //   queue -> ready_queue -> head -> process -> next_stop = time + queue -> ready_queue -> head -> process -> list_rafaga[numero_rafaga];
-              //   queue -> ready_queue -> head -> process -> turnos_cpu++;
-              //   queue -> ready_queue -> head -> process -> cantidad_rafagas_completadas++;
-              //   if (queue -> ready_queue -> head -> process -> was_executed == 0){
-              //     queue -> ready_queue -> head -> process -> was_executed = 1;
-              //     queue -> ready_queue -> head -> process -> respose_time = time - queue -> ready_queue -> head -> process -> original_start_time;
-              //   }
-              //   list_append_by_next_stop(queue -> cpu_queue, queue -> ready_queue -> head -> process);
-              //   Node* node = list_pop(queue -> ready_queue);
-              // }
-
-              // printf("Proceso: %s pasa A CPU en tiempo %i\n", queue -> ready_queue -> head -> process -> name, time);
-              // list_append_by_deadline(queue -> cpu_queue, queue -> ready_queue -> head);
-              // queue -> ready_queue -> head -> process -> turnos_cpu++;
-
-              // queue -> ready_queue -> head -> process -> next_stop = time + queue -> ready_queue -> head -> process -> list_rafaga[numero_rafaga];
-              // queue -> ready_queue -> head -> process -> cantidad_rafagas_completadas++;
-              // Calculo de response time si corresponde
-              // if (queue -> ready_queue -> head -> process -> was_executed == 0){
-              //   queue -> ready_queue -> head -> process -> was_executed = 1;
-              //   queue -> ready_queue -> head -> process -> respose_time = time - queue -> ready_queue -> head -> process -> original_start_time;
-              // }
-              // Node* node = list_pop(queue -> ready_queue);
-              // printf("POP\n");
             }
 
             else if (queue->cpu_queue->current_occupancy == cpus)
@@ -364,31 +297,10 @@ int main(int argc, char **argv)
             }
           }
 
-          // printf("WAITING -> READY\n");
-          // if (queue -> waiting_queue -> head != NULL){
-          //   if (queue -> waiting_queue -> head -> process -> next_stop == time){
-          //     printf("Proceso: %s pasa A READY en tiempo %i\n", queue->waiting_queue->head->process->name, time);
-          //     list_append_by_deadline(queue -> ready_queue, queue -> waiting_queue -> head -> process);
-          //     Node* node = list_pop(queue -> waiting_queue);
-          //   }
-          // }
-          // printf("Time: %i\n", time);
-          // printf("Len Queue OG: %i.\n", queue->queues_list->current_occupancy);
-          // printf("Len Queue Ready: %i\n", queue -> ready_queue -> current_occupancy);
-          // printf("Len Queue CPU: %i\n", queue->cpu_queue->current_occupancy);
-          // printf("Len Queue Waiting: %i\n", queue->waiting_queue->current_occupancy);
-          // printf("Len Queue Finished: %i\n", queue->finished_queue->current_occupancy);
         }
         time++;
-          // if (time > 10 * queue->queues_list->tiempo_max)
-          // {
-          //   break;
-          // }
       }
     }
   }
-        // list_print(queue -> queue_list);
-        // list_print(queue -> ready_queue);
-        // list_print(queue -> cpu_queue);
   return 0;
 }

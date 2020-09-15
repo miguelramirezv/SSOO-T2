@@ -343,6 +343,9 @@ Node* list_remove(List* list, int pid){
     if (node -> next){
       list -> head = node -> next;
     }
+    else {
+      list -> head = NULL;
+    }
   }
   else {
     for (Node* current = list -> head; current; current = current -> next){
