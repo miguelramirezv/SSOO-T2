@@ -12,6 +12,7 @@ Queue* queue_init(){
     queue -> cpu_queue = list_init();
     queue -> waiting_queue = list_init();   // Sorted by 
     queue -> finished_queue = list_init();  // Not sorted
+    queue -> num_programs = 0;
 
     // printf("INSIDE QUEUE INIT: %p\n", queue -> queues_list -> head);
 

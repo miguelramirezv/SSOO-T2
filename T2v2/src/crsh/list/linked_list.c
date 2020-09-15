@@ -56,7 +56,6 @@ Node* list_append_by_deadline(List* list, Process* process)
               if (node -> process -> pid < current -> next -> process -> pid){
                   node -> next = current -> next;
                   current -> next = node;
-                  return NULL;
                   break;
               }
           }

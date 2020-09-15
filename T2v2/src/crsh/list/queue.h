@@ -12,6 +12,7 @@ struct queue
     List* cpu_queue;
     List* waiting_queue;
     List* finished_queue;
+    int num_programs;
 };
 
 Queue* queue_init();
