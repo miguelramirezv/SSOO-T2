@@ -115,3 +115,38 @@
     //   }
     //   // Revisar si hay que interrumpir
     // }
+
+  /////////////////////////
+  // if (next_stop > queue -> ready_queue -> head -> process -> deadline){
+  //   // NO ALCANZA A TERMINAR
+  //   queue -> ready_queue -> head -> process -> finish = 0;
+  //   list_append_by_deadline(queue -> finished_queue, queue -> ready_queue -> head -> process);
+  //   Node* node = list_pop(queue -> ready_queue);
+  // }
+  // else {
+  // printf("Proceso: %s pasa A CPU en tiempo %i\n", queue -> ready_queue -> head -> process -> name, time);
+  // int numero_rafaga = queue -> ready_queue -> head -> process -> cantidad_rafagas_completadas;
+  // queue -> ready_queue -> head -> process -> next_stop = time + queue -> ready_queue -> head -> process -> list_rafaga[numero_rafaga];
+  // queue -> ready_queue -> head -> process -> turnos_cpu++;
+  // queue -> ready_queue -> head -> process -> cantidad_rafagas_completadas++;
+  // if (queue -> ready_queue -> head -> process -> was_executed == 0){
+  //   queue -> ready_queue -> head -> process -> was_executed = 1;
+  //   queue -> ready_queue -> head -> process -> respose_time = time - queue -> ready_queue -> head -> process -> original_start_time;
+  // }
+  // list_append_by_deadline(queue -> cpu_queue, queue -> ready_queue -> head -> process);
+  // Node* node = list_pop(queue -> ready_queue);
+  //}
+
+  // printf("Proceso: %s pasa A CPU en tiempo %i\n", queue -> ready_queue -> head -> process -> name, time);
+  // list_append_by_deadline(queue -> cpu_queue, queue -> ready_queue -> head);
+  // queue -> ready_queue -> head -> process -> turnos_cpu++;
+
+  // queue -> ready_queue -> head -> process -> next_stop = time + queue -> ready_queue -> head -> process -> list_rafaga[numero_rafaga];
+  // queue -> ready_queue -> head -> process -> cantidad_rafagas_completadas++;
+  // Calculo de response time si corresponde
+  // if (queue -> ready_queue -> head -> process -> was_executed == 0){
+  //   queue -> ready_queue -> head -> process -> was_executed = 1;
+  //   queue -> ready_queue -> head -> process -> respose_time = time - queue -> ready_queue -> head -> process -> original_start_time;
+  // }
+  // Node* node = list_pop(queue -> ready_queue);
+  // printf("POP\n");

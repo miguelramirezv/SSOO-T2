@@ -18,6 +18,8 @@ struct process {
     int respose_time;  // ir actualizando
     int waiting_time;  // ir actualizando
     int start_time;
+    int original_start_time; // este no cambia. Se usa para calcular turnaround time.
+    int was_executed; // 1 si ya tuvo alguna rafaga cpu. 0 si no. 
     int cantidad_rafagas;
     int deadline;
     int running_time;

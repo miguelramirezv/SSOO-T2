@@ -49,8 +49,12 @@ void read_file(char* input, Queue* queue){
         }
       }
       else if (contador == 4){
-        proceso -> cantidad_rafagas = atoi(token);
-        rafagas = malloc(sizeof(int) * ((proceso -> cantidad_rafagas * 2) - 1) + 1);
+        proceso -> cantidad_rafagas = 2 * atoi(token) - 1;
+        rafagas = malloc(sizeof(int) * (proceso -> cantidad_rafagas) + 1);
+        // proceso -> cantidad_rafagas = atoi(token);
+        // printf("CANTIDAD RAFAGAS: %i\n", proceso -> cantidad_rafagas);
+        // rafagas = malloc(sizeof(int) * ((proceso -> cantidad_rafagas * 2) - 1) + 1);
+        // printf("MEM ARRAY: %i\n", (proceso -> cantidad_rafagas));
       }
       else {
         rafagas[contador - 5] =  atoi(token);
@@ -117,15 +121,26 @@ int main(int argc, char **argv)
         }
         else {
           // PASA A WAITING
-          queue -> cpu_queue -> head -> process -> cantidad_rafagas_completadas++;
           int numero_rafaga = queue -> cpu_queue -> head -> process -> cantidad_rafagas_completadas;
           queue -> cpu_queue -> head -> process -> next_stop = time + queue -> cpu_queue -> head -> process -> list_rafaga[numero_rafaga];
+          queue->cpu_queue->head->process->cantidad_rafagas_completadas++;
           queue -> cpu_queue -> head -> process -> ultima_rafaga = 1;
           printf("Process %s pasa a WAITING en Time: %i\n", queue -> cpu_queue -> head -> process -> name, time);
           list_append_by_next_stop(queue -> waiting_queue, queue -> cpu_queue -> head -> process);
           Node* node = list_pop(queue -> cpu_queue);
-          
+
         }
+      }
+    }
+
+    // printf("WAITING -> READY\n");
+    if (queue->waiting_queue->head != NULL)
+    {
+      if (queue->waiting_queue->head->process->next_stop == time)
+      {
+        printf("Proceso: %s pasa A READY en tiempo %i\n", queue->waiting_queue->head->process->name, time);
+        list_append_by_deadline(queue->ready_queue, queue->waiting_queue->head->process);
+        Node *node = list_pop(queue->waiting_queue);
       }
     }
 // 
@@ -152,7 +167,7 @@ int main(int argc, char **argv)
               queue -> ready_queue -> head -> process -> was_executed = 1;
               queue -> ready_queue -> head -> process -> respose_time = time - queue -> ready_queue -> head -> process -> original_start_time;
             }
-            list_append_by_deadline(queue -> cpu_queue, queue -> ready_queue -> head -> process);
+            list_append_by_next_stop(queue -> cpu_queue, queue -> ready_queue -> head -> process);
             Node* node = list_pop(queue -> ready_queue);
           }
 
@@ -173,11 +188,18 @@ int main(int argc, char **argv)
       }
       else if (queue -> cpu_queue -> current_occupancy == cpus){
         if (queue -> ready_queue -> head != NULL){
-          Node* last_node_cpu;
+          Node* last_node_cpu = queue -> ready_queue -> head;
+          // Node* last_node_cpu;
           for (Node* current = queue -> cpu_queue -> head; current; current = current -> next){
-            if (current -> next == NULL){
+            if (current -> process -> deadline > last_node_cpu -> process -> deadline){
               last_node_cpu = current;
               break;
+            }
+            else if (current -> process -> deadline == last_node_cpu -> process -> deadline){
+              if (current -> process -> pid > last_node_cpu -> process -> pid){
+                last_node_cpu = current;
+                break;
+              }
             }
           }
           if (queue -> ready_queue -> head -> process -> deadline < last_node_cpu -> process -> deadline){
@@ -200,13 +222,15 @@ int main(int argc, char **argv)
         }
       }
     }
+    
     // printf("WAITING -> READY\n");
-    if (queue -> waiting_queue -> head != NULL){
-      if (queue -> waiting_queue -> head -> process -> next_stop == time){
-        list_append_by_deadline(queue -> ready_queue, queue -> waiting_queue -> head -> process);
-        Node* node = list_pop(queue -> waiting_queue);
-      }
-    }
+    // if (queue -> waiting_queue -> head != NULL){
+    //   if (queue -> waiting_queue -> head -> process -> next_stop == time){
+    //     printf("Proceso: %s pasa A READY en tiempo %i\n", queue->waiting_queue->head->process->name, time);
+    //     list_append_by_deadline(queue -> ready_queue, queue -> waiting_queue -> head -> process);
+    //     Node* node = list_pop(queue -> waiting_queue);
+    //   }
+    // }
   }
   // list_print(queue -> queue_list);
   // list_print(queue -> ready_queue);

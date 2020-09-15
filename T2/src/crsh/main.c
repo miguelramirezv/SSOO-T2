@@ -13,6 +13,9 @@
 #include "process/process.h"
 #include <time.h>
 
+// TURNAROUND TIME: tiempo desde envío hasta término (cuando pase desde cpu a finished, hacer time - start_time_og)
+// RESPONSE TIME: tiempo desde llegada a la cola hasta primera ejecución (agregar atributo 1 o 0 if ejecutado alguna vez. Cuando sea ejecutado por primera vez, time - start_time)
+// // Implementado. Not tested. 
 
 // List* pids;
 // Args* args;
@@ -193,6 +196,7 @@ Queue* read_file(char* input){
       }
       else if (contador == 2){
         proceso ->start_time = atoi(token);
+        proceso -> original_start_time = atoi(token);  // Este no va a cambiar 
       }
       else if (contador == 3){
         proceso -> deadline = atoi(token);
@@ -258,9 +262,10 @@ int main(int argc, char **argv)
 
   for (int time = 0; time <= deadline_queue -> queue_list -> tiempo_max; time++){
     bool cambios = true;
-    while (cambios){
+    while (cambios){ // entra en algún minuto ? 
       cambios = false;
       if (waiting_queue -> queue_list -> head){
+        // Waiting a ready
         if (waiting_queue -> queue_list -> head -> process -> start_time == time){
           Node* waited_node = list_pop(waiting_queue);
           Node* first_ready = list_append(ready_queue, waited_node);
@@ -271,11 +276,54 @@ int main(int argc, char **argv)
               list_append(cpu_queue, first_ready);
               first_ready -> process -> turnos_cpu ++;
               first_ready -> process -> waiting_time += (time - first_ready -> process -> start_time);
-
+              if (first_ready -> process -> was_executed == 0){
+                first_ready -> process -> was_executed = 1;
+                first_ready -> process -> response_time = time - first_ready -> process -> original_start_time;
+              }
             }
             else{
-              // transformar cola de tiempos en cola prioridades
-              // 
+              // Transformo cola de tiempos en cola prioridades
+              Queue* temp_cpu_queue = queue_init();
+              for (Node* current = cpu_queue -> head; current; current = current -> next){
+                list_append(temp_cpu_queue -> queue_list, current);
+              }
+              // Determinar si corresponde interrumpir o no
+              // // Si corresponde interrumpir porque deadline es menor
+              if (first_ready -> process -> deadline < temp_cpu_queue -> queue_list -> head -> deadline){
+                // Obtener proceso con peor prioridad (último de queue)
+                for (Node* current = cpu_queue -> head; current; current = current -> next){
+                  // Si current -> next -> next = NULL, entonces current es el penúltimo. Sacamos current -> next (que sería el último).
+                  if (!current -> next -> next){
+                    list_append(ready_queue -> queue_list, current -> next -> process);
+                    current -> next = NULL; // Falta destruir el nodo
+                    // Dejar registrado donde quedó ejecutando 
+                    list_append(cpu_queue -> queue_list, first_ready -> process); // Agregar a cpu
+                    break;
+                  }
+                }
+              }
+              // // Caso en que tengan igual deadline. Desempatar por pid
+              else if (first_ready -> process -> deadline == temp_cpu_queue -> queue_list -> head -> deadline){
+                // Obtener proceso con peor prioridad (último de queue)
+                for (Node* current = cpu_queue -> head; current; current = current -> next){
+                  // Si current -> next -> next = NULL, entonces current es el penúltimo. Sacamos current -> next (que sería el último).
+                  if (!current -> next -> next){
+                    // Si first_ready tiene pid más bajo que último de temp_cpu_queue, interrumpir
+                    if (first_ready -> process -> pid < current -> next -> process -> pid){
+                      list_append(ready_queue -> queue_list, current -> next -> process);
+                      current -> next = NULL; // Falta destruir el nodo
+                      // Dejar rgistrado donde quedó ejecutando
+                      list_append(cpu_queue -> queue_list, first_ready -> process); // Agregar a cpu
+                      break;
+                    }
+                  }
+                }
+
+              }
+              // // Caso en que no corresponde interrumpir
+              else {
+
+              }
               // ver si interrumpir
               // en caso de que sí, 
               // pop ultimo de prioridades
