@@ -97,12 +97,18 @@ int main(int argc, char **argv)
   char* input_file = argv[1];
   char* output_file = argv[2];
   int cpus;
-  if (true){    // ESTO HACERLO BIEN REVISAR SI HAY TERCER INPUT
-    cpus = 2;
+  if (argc < 4){
+    cpus = 1;
   }
   else {
     cpus = atoi(argv[3]);
   }
+  // if (true){    // ESTO HACERLO BIEN REVISAR SI HAY TERCER INPUT
+  //   cpus = 2;
+  // }
+  // else {
+  //   cpus = atoi(argv[3]);
+  // }
 
   Queue* queue = queue_init();
   // printf("AFTER INIT MAIN: %p\n", queue -> queues_list -> head);
@@ -125,13 +131,13 @@ int main(int argc, char **argv)
       bool cambios = true;
       while (cambios){
         cambios = false;
-        if (queue -> cpu_queue -> head != NULL){
-          printf("CPU Head: %s\n", queue -> cpu_queue -> head -> process -> name);
-          printf("CPU Head Next Stop: %i\n", queue->cpu_queue->head->process->next_stop);
-        }
-        else {
-          printf("CPU Head: %p\n", queue -> cpu_queue -> head);
-        }
+        // if (queue -> cpu_queue -> head != NULL){
+        //   printf("CPU Head: %s\n", queue -> cpu_queue -> head -> process -> name);
+        //   printf("CPU Head Next Stop: %i\n", queue->cpu_queue->head->process->next_stop);
+        // }
+        // else {
+        //   printf("CPU Head: %p\n", queue -> cpu_queue -> head);
+        // }
         // Revisar si hay que pasar de queue_list a ready
         // printf("QUEUE LIST -> READY\n");
         if (queue->queues_list->head != NULL)
