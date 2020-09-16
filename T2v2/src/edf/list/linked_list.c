@@ -56,11 +56,23 @@ Node* list_append_by_deadline(List* list, Process* process)
           // printf("FOR LOOP 1 \n");
           for (Node* current = list -> head; current; current = current -> next){
             if (current -> next){
-              if (node -> process -> pid < current -> next -> process -> pid){
+              if (node -> process -> deadline == current -> next -> process -> deadline){
+                if (node -> process -> pid < current -> next -> process -> pid){
                   node -> next = current -> next;
                   current -> next = node;
                   break;
+                }
               }
+              else {
+                node -> next = current -> next;
+                current -> next = node;
+                break;
+              }
+              // if (node -> process -> pid < current -> next -> process -> pid){
+              //     node -> next = current -> next;
+              //     current -> next = node;
+              //     break;
+              // }
             }
             else{
               current -> next = node;
@@ -103,7 +115,7 @@ Node* list_append_by_deadline(List* list, Process* process)
 
 Node* list_append_by_start_time(List* list, Process* process){
 
-  printf("ENNTRE\n");
+  // printf("ENNTRE\n");
 
   Node* node = malloc(sizeof(Node));
   node -> process = process;
@@ -123,11 +135,24 @@ Node* list_append_by_start_time(List* list, Process* process){
     }
     else {
       for (Node* current = list -> head; current; current = current -> next){
-        if (node -> process -> pid < current -> next -> process -> pid){
+        if (node -> process -> start_time == current -> process -> start_time){
+          if (node -> process -> pid < current -> process -> pid){
+            node -> next = current -> next;
+            current -> next = node;
+            break;
+          }
+        }
+        else {
           node -> next = current -> next;
           current -> next = node;
           break;
         }
+        
+        // if (node -> process -> pid < current -> next -> process -> pid){
+        //   node -> next = current -> next;
+        //   current -> next = node;
+        //   break;
+        // }
       }
     }
   }
@@ -178,11 +203,23 @@ Node* list_append_by_next_stop(List* list, Process* process){
     else {
       for (Node* current = list -> head; current; current = current -> next){
         if (current -> next){
-          if (node -> process -> pid < current -> next -> process -> pid){
+          if (node -> process -> next_stop == current -> next -> process -> next_stop){
+            if (node -> process -> pid < current -> next -> process -> pid){
+              node -> next = current -> next;
+              current -> next = node;
+              break;
+            }
+          }
+          else {
             node -> next = current -> next;
             current -> next = node;
             break;
           }
+          // if (node -> process -> pid < current -> next -> process -> pid){
+          //   node -> next = current -> next;
+          //   current -> next = node;
+          //   break;
+          // }
         }
         else {
           node -> next = NULL;

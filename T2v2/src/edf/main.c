@@ -66,10 +66,10 @@ void read_file(char* input, Queue* queue){
       contador += 1;
     }
     proceso -> list_rafaga = rafagas; // añadir a programas
-    printf("Before append\n");
+    // printf("Before append\n");
     // node = list_append_by_deadline(queue -> queue_list, proceso);
     node = list_append_by_start_time(queue -> queues_list, proceso);
-    printf("After append\n");
+    // printf("After append\n");
   }
   queue -> queues_list -> tiempo_max = tiempo_max;
 }
@@ -119,10 +119,10 @@ int main(int argc, char **argv)
   // printf("TIEMPO MAX: %i\n", queue -> queues_list -> tiempo_max);
   int time = 0;
   while (queue -> finished_queue -> current_occupancy < queue -> num_programs){
-    printf("Time: %i\n", time);
-    if (time > 250){
-      break;
-    }
+    // printf("Time: %i\n", time);
+    // if (time > 150){
+    //   break;
+    // }
     // printf("Occupancy Ready: %i\n", queue->ready_queue->current_occupancy);
     // printf("Occupancy CPU: %i\n", queue->cpu_queue->current_occupancy);
     // printf("Occupancy Waiting: %i\n", queue->waiting_queue->current_occupancy);
@@ -144,7 +144,7 @@ int main(int argc, char **argv)
         {
           if (queue->queues_list->head->process->start_time == time)
           {
-            printf("Process %s Starts. Time: %i\n", queue->queues_list->head->process->name, time);
+            // printf("Process %s Starts. Time: %i\n", queue->queues_list->head->process->name, time);
             list_append_by_deadline(queue->ready_queue, queue->queues_list->head->process);
             queue->queues_list->head->process->enter_ready = time;
             Node *node = list_pop(queue->queues_list); // NO HE TESTEADO
@@ -157,28 +157,33 @@ int main(int argc, char **argv)
         if (queue->cpu_queue->head != NULL)
         {
           // printf("Time: %i\n", time);
-          // printf("NEXT STOP: %i\n", queue -> cpu_queue -> head -> process -> next_stop);
+          // printf("Process %s  Next Stop: %i\n", queue->cpu_queue->head->process->name, queue->cpu_queue->head->process->next_stop);
           if (queue->cpu_queue->head->process->next_stop == time)
           {
+            // TEMP
+            // queue->cpu_queue->head->process->cantidad_rafagas_completadas++;
             // PROCESO TERMINA. TODO: MAS DE UNO QUE TERMINA EN T
             if (queue->cpu_queue->head->process->cantidad_rafagas_completadas == queue->cpu_queue->head->process->cantidad_rafagas - 1)
-            {
-              // PASA A FINISHED
-              printf("Process %s pasa a FINISHED en Time: %i\n", queue->cpu_queue->head->process->name, time);
-              if (queue -> cpu_queue -> head -> process -> deadline < time){
-                queue->cpu_queue->head->process->finish = 0;
-              }
-              else {
-                queue->cpu_queue->head->process->finish = 1;
-              }
-              // queue->cpu_queue->head->process->finish = 1;
-              queue->cpu_queue->head->process->remaining_interrupcion = -1;
-              queue->cpu_queue->head->process->enter_finish = time;
-              queue->cpu_queue->head->process->time_running_queue += (time - queue->cpu_queue->head->process->enter_running);
-              queue->cpu_queue->head->process->turnaround_time = time - queue->cpu_queue->head->process->original_start_time;
-              list_append_by_deadline(queue->finished_queue, queue->cpu_queue->head->process);
-              Node *node = list_pop(queue->cpu_queue);
-              cambios = true;
+            // if (queue->cpu_queue->head->process->cantidad_rafagas_completadas == queue->cpu_queue->head->process->cantidad_rafagas)
+              {
+                // PASA A FINISHED
+                // printf("Process %s pasa a FINISHED en Time: %i\n", queue->cpu_queue->head->process->name, time);
+                if (queue->cpu_queue->head->process->deadline < time)
+                {
+                  queue->cpu_queue->head->process->finish = 0;
+                }
+                else
+                {
+                  queue->cpu_queue->head->process->finish = 1;
+                }
+                // queue->cpu_queue->head->process->finish = 1;
+                queue->cpu_queue->head->process->remaining_interrupcion = -1;
+                queue->cpu_queue->head->process->enter_finish = time;
+                queue->cpu_queue->head->process->time_running_queue += (time - queue->cpu_queue->head->process->enter_running);
+                queue->cpu_queue->head->process->turnaround_time = time - queue->cpu_queue->head->process->original_start_time;
+                list_append_by_deadline(queue->finished_queue, queue->cpu_queue->head->process);
+                Node *node = list_pop(queue->cpu_queue);
+                cambios = true;
             }
             else
             {
@@ -192,7 +197,7 @@ int main(int argc, char **argv)
               queue->cpu_queue->head->process->remaining_interrupcion = -1;
               queue->cpu_queue->head->process->enter_waiting = time;
               queue->cpu_queue->head->process->time_running_queue += (time - queue->cpu_queue->head->process->enter_running);
-              printf("Process %s pasa a WAITING en Time: %i\n", queue->cpu_queue->head->process->name, time);
+              // printf("Process %s pasa a WAITING en Time: %i\n", queue->cpu_queue->head->process->name, time);
               //if (time == 113){
               // ßprintf("NEXT STOP %s: %i\n", queue->cpu_queue->head->process->name, queue->cpu_queue->head->process->next_stop);
               //}
@@ -215,7 +220,7 @@ int main(int argc, char **argv)
         {
           if (queue->waiting_queue->head->process->next_stop == time)
           {
-            printf("Proceso: %s pasa A READY en tiempo %i\n", queue->waiting_queue->head->process->name, time);
+            // printf("Proceso: %s pasa A READY en tiempo %i\n", queue->waiting_queue->head->process->name, time);
             queue->waiting_queue->head->process->cantidad_rafagas_completadas++;
             queue->waiting_queue->head->process->enter_ready = time;
             queue->waiting_queue->head->process->time_waiting_queue += (time - queue->waiting_queue->head->process->enter_waiting);
@@ -228,6 +233,17 @@ int main(int argc, char **argv)
         // printf("READY -> CPU");
         if (queue->ready_queue->head != NULL)
         {
+          // if (queue->ready_queue->head->process->pid == 175){
+          //   printf("Process 182 READY TO GO IN. TIME: %i   DEADLINE: %i\n", time, queue->ready_queue->head->process->deadline);
+          //   printf("OG START: %i\n", queue->ready_queue->head->process->original_start_time);
+          //   if (queue->cpu_queue->head != NULL)
+          //   {
+          //     printf("CPU HEAD: %s   DEADLINE: %i\n", queue->cpu_queue->head->process->name, queue->cpu_queue->head->process->deadline);
+          //   }
+          // }
+          // printf("\n");
+
+          // printf("CPU HEAD: %s   DEADLINE: %i\n", queue->cpu_queue->head->process->name, queue->cpu_queue->head->process->deadline);
           if (queue->cpu_queue->current_occupancy < cpus)
           {
             int numero_rafaga = queue->ready_queue->head->process->cantidad_rafagas_completadas;
@@ -240,7 +256,7 @@ int main(int argc, char **argv)
             {
               queue->ready_queue->head->process->next_stop = time + queue->ready_queue->head->process->remaining_interrupcion;
             }
-            printf("Proceso: %s pasa A CPU en tiempo %i\n", queue->ready_queue->head->process->name, time);
+            // printf("Proceso: %s pasa A CPU en tiempo %i\n", queue->ready_queue->head->process->name, time);
             queue->ready_queue->head->process->turnos_cpu++;
             queue->ready_queue->head->process->enter_running = time;
             queue->ready_queue->head->process->time_ready_queue += (queue->ready_queue->head->process->enter_running - queue->ready_queue->head->process->enter_ready);
@@ -252,6 +268,14 @@ int main(int argc, char **argv)
               queue->ready_queue->head->process->was_executed = 1;
               queue->ready_queue->head->process->respose_time = time - queue->ready_queue->head->process->original_start_time;
             }
+            if (queue->ready_queue->head->process->pid == 175){
+              printf("Process 182 READY TO GO IN. TIME: %i   DEADLINE: %i\n", time, queue->ready_queue->head->process->deadline);
+              // printf("OG START: %i\n", queue->ready_queue->head->process->original_start_time);
+              if (queue->cpu_queue->head != NULL)
+              {
+                printf("CPU HEAD: %s   DEADLINE: %i\n", queue->cpu_queue->head->process->name, queue->cpu_queue->head->process->deadline);
+              }
+            }
             list_append_by_next_stop(queue->cpu_queue, queue->ready_queue->head->process);
             Node *node = list_pop(queue->ready_queue);
             cambios = true;
@@ -262,7 +286,7 @@ int main(int argc, char **argv)
           {
             if (queue->ready_queue->head != NULL)
             {
-              Node *last_node_cpu = queue->ready_queue->head;
+              Node *last_node_cpu = queue->cpu_queue->head;
               for (Node *current = queue->cpu_queue->head; current; current = current->next)
               {
                 if (current->process->deadline > last_node_cpu->process->deadline)
@@ -294,6 +318,11 @@ int main(int argc, char **argv)
                 {
                   queue->ready_queue->head->process->next_stop = time + queue->ready_queue->head->process->remaining_interrupcion;
                 }
+                if (queue->ready_queue->head->process->was_executed == 0)
+                {
+                  queue->ready_queue->head->process->was_executed = 1;
+                  queue->ready_queue->head->process->respose_time = time - queue->ready_queue->head->process->original_start_time;
+                }
                 queue->ready_queue->head->process->turnos_cpu++;
                 // DEFINIR VALORES DEL QUE VA A SALIR
                 last_node_cpu->process->num_interrupciones++;
@@ -304,9 +333,19 @@ int main(int argc, char **argv)
 
                 // printf("READY HEAD PROCESS: %p\n", queue -> ready_queue -> head -> process);
                 // Registrar donde quedo
-                printf("Proceso: %s pasa A READY en tiempo %i", last_node_cpu->process->name, time);
-                printf(". Le quedan %i por ejecutar.\n", last_node_cpu->process->remaining_interrupcion);
-                printf("Proceso: %s pasa A CPU en tiempo %i\n", queue->ready_queue->head->process->name, time);
+                // printf("Proceso: %s pasa A READY en tiempo %i", last_node_cpu->process->name, time);
+                // printf(". Le quedan %i por ejecutar.\n", last_node_cpu->process->remaining_interrupcion);
+                // printf("Proceso: %s pasa A CPU en tiempo %i\n", queue->ready_queue->head->process->name, time);
+
+                if (queue->ready_queue->head->process->pid == 175){
+                  printf("Process 182 READY TO GO IN. TIME: %i   DEADLINE: %i\n", time, queue->ready_queue->head->process->deadline);
+                  // printf("OG START: %i\n", queue->ready_queue->head->process->original_start_time);
+                  if (queue->cpu_queue->head != NULL)
+                  {
+                    printf("CPU HEAD: %s   DEADLINE: %i\n", queue->cpu_queue->head->process->name, queue->cpu_queue->head->process->deadline);
+                  }
+                }
+
                 Node *popped_node = list_remove(queue->cpu_queue, last_node_cpu->process->pid);
                 Node *node = list_pop(queue->ready_queue);
 
@@ -338,21 +377,40 @@ int main(int argc, char **argv)
                   {
                     queue->ready_queue->head->process->next_stop = time + queue->ready_queue->head->process->remaining_interrupcion;
                   }
+                  if (queue->ready_queue->head->process->was_executed == 0)
+                  {
+                    queue->ready_queue->head->process->was_executed = 1;
+                    queue->ready_queue->head->process->respose_time = time - queue->ready_queue->head->process->original_start_time;
+                  }
                   // DEFINIR VALORES DEL QUE VA A SALIR
                   last_node_cpu->process->num_interrupciones++;
                   last_node_cpu->process->remaining_interrupcion = last_node_cpu->process->next_stop - time;
                   last_node_cpu->process->enter_ready = time;
+                  last_node_cpu->process->time_running_queue += (last_node_cpu->process->enter_ready - last_node_cpu->process->enter_running);
                   // printf("NEXT STOP LAST NODE: %i\n", last_node_cpu -> process -> remaining_interrupcion);
 
                   // printf("READY HEAD PROCESS: %p\n", queue -> ready_queue -> head -> process);
                   // Registrar donde quedo
-                  printf("Proceso: %s pasa A READY en tiempo %i", last_node_cpu->process->name, time);
-                  printf(". Le quedan %i por ejecutar.\n", last_node_cpu->process->remaining_interrupcion);
-                  printf("Proceso: %s pasa A CPU en tiempo %i\n", queue->ready_queue->head->process->name, time);
+                  // printf("Proceso: %s pasa A READY en tiempo %i", last_node_cpu->process->name, time);
+                  // printf(". Le quedan %i por ejecutar.\n", last_node_cpu->process->remaining_interrupcion);
+                  // printf("Proceso: %s pasa A CPU en tiempo %i\n", queue->ready_queue->head->process->name, time);
+
+                  if (queue->ready_queue->head->process->pid == 175){
+                    printf("Process 182 READY TO GO IN. TIME: %i   DEADLINE: %i\n", time, queue->ready_queue->head->process->deadline);
+                    // printf("OG START: %i\n", queue->ready_queue->head->process->original_start_time);
+                    if (queue->cpu_queue->head != NULL)
+                    {
+                      printf("CPU HEAD: %s   DEADLINE: %i\n", queue->cpu_queue->head->process->name, queue->cpu_queue->head->process->deadline);
+                    }
+                  }
+
                   Node *popped_node = list_remove(queue->cpu_queue, last_node_cpu->process->pid);
                   Node *node = list_pop(queue->ready_queue);
 
                   node->process->enter_running = time;
+                  node->process->turnos_cpu++;
+                  node->process->time_ready_queue += (node->process->enter_running - node->process->enter_ready);
+
                   // printf("\nPOPPED NODE: %s\n", popped_node->process->name);
 
                   list_append_by_deadline(queue->ready_queue, last_node_cpu->process);
@@ -378,7 +436,7 @@ int main(int argc, char **argv)
       //}
   }
   
-  list_print_final(queue -> finished_queue);
+  // list_print_final(queue -> finished_queue);
   write_file(output_file, queue);
   return 0;
 }
