@@ -48,5 +48,7 @@ Node* list_pop_tail(List* list);
 Node* list_remove(List* list, int pid);
 /** Imprime todos los elementos de la lista */
 void list_print(List* list);
+
+void list_print_final(List *list);
 /** Libera todos los recursos asociados a esta lista */
 void list_destroy(List* list);

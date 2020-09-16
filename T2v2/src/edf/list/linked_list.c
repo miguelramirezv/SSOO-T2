@@ -398,6 +398,20 @@ void list_print(List* list)
   }
 }
 
+void list_print_final(List *list)
+{
+  printf("\n");
+  // printf("Current Head: %p\n", list->head);
+  // printf("Current Tail: %p\n", list->tail);
+  // printf("Current Length: %i\n", list->current_occupancy);
+  for (Node *current = list->head; current; current = current->next)
+  {
+    printf("Name: %s  Turnos CPU: %i    Interrupciones: %i\n", current->process->name, current->process->turnos_cpu, current->process->num_interrupciones); /* -> value*/
+    printf("Turnaround: %i   Response: %i    Waiting: %i     Deadline: %i\n", current->process->turnaround_time, current->process->respose_time, (current->process->time_waiting_queue+current->process->time_ready_queue), current->process->finish);
+    printf("\n");
+  }
+}
+
 /** Libera todos los recursos asociados a esta lista */
 void list_destroy(List* list)
 {
